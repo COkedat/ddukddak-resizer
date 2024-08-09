@@ -1,0 +1,1 @@
+pyinstaller -F ddukddak_resizer_main.py
