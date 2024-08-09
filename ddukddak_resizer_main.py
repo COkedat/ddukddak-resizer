@@ -127,7 +127,7 @@ def main():
     # resize_all이 True일 경우 동일 폴더 내 모든 이미지 리사이징
     if resizer.resize_all:
         # 이미지 파일 목록 불러오기
-        print("Mode : Resize All")
+        print("[Mode] Resize All")
         img_list = [f for f in os.listdir('.') if 
                     f.endswith('.jpg') or f.endswith('.png') or 
                     f.endswith('.jpeg') or f.endswith('.bmp') or 
@@ -147,7 +147,7 @@ def main():
             print("or change 'resize_all' to 'True' in config.ini to resize all images in the folder.")
             return
         # 인수들을 이미지 파일 리스트로 저장
-        print("Mode : Resize Selected")
+        print("[Mode] Resize Selected")
         img_list = sys.argv[1:]
 
     # 이미지 리스트 리사이징 후 저장
