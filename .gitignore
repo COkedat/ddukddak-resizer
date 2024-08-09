@@ -1,0 +1,5 @@
+resized/*
+__pycache__/*
+*.png
+*.jpg
+config.ini
