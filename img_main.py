@@ -142,8 +142,9 @@ def main():
         # 이미지 파일 경로를 입력하지 않았을 경우 사용법 출력
         if len(sys.argv) < 2:
             print("[Warning] No image file path is given.")
-            print("Usage: python img_main.py [image_path1] [image_path2] ...")
-            print("Or change 'resize_all' to 'True' in config.ini to resize all images in the folder.")
+            print("Usage: python img_main.py [image_path1] [image_path2] ... ")
+            print("or Drag and Drop image files to the script.")
+            print("or change 'resize_all' to 'True' in config.ini to resize all images in the folder.")
             return
         # 인수들을 이미지 파일 리스트로 저장
         print("Mode : Resize Selected")
