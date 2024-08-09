@@ -3,3 +3,7 @@ __pycache__/*
 *.png
 *.jpg
 config.ini
+build/*
+dist/*
+*.spec
+*.exe
