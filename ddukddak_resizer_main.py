@@ -14,6 +14,7 @@ class ImageResizer:
         # 변수와 기본값 설정
         self.resize_all = False
         self.target_area = 1048576
+        self.use_folder = True
         self.save_folder = 'resized'
         self.save_suffix = '_resized'
         self.save_on_exe_folder = True
@@ -29,6 +30,7 @@ class ImageResizer:
             config['img_resize'] = {}
             config['img_resize']['target_area'] = '1048576'
             config['img_save'] = {}
+            config['img_save']['use_folder'] = 'True'
             config['img_save']['save_folder'] = 'resized'
             config['img_save']['save_suffix'] = '_resized'
             config['img_save']['save_on_exe_folder'] = 'True'
@@ -42,6 +44,7 @@ class ImageResizer:
         config.read('config.ini')
         self.resize_all = config.getboolean('DEFAULT', 'resize_all')
         self.target_area = config.getint('img_resize', 'target_area')
+        self.use_folder = config.getboolean('img_save', 'use_folder')
         self.save_folder = config.get('img_save', 'save_folder')
         self.save_suffix = config.get('img_save', 'save_suffix')
         self.save_on_exe_folder = config.getboolean('img_save', 'save_on_exe_folder')
@@ -100,11 +103,18 @@ class ImageResizer:
     def img_save(self, img, img_path):
         # save_on_exe_folder가 True일 경우 실행 파일이 있는 폴더에 저장 (기본값, 폴더 생성 O)
         if self.save_on_exe_folder:
-            save_path = os.path.join(os.path.dirname(sys.argv[0]), self.save_folder)
-            if not os.path.exists(save_path):
-                os.makedirs(save_path)
-            save_path = os.path.join(save_path, os.path.basename(img_path)[:-len(os.path.splitext(img_path)[1])] + self.save_suffix)
-            save_path = os.path.join(save_path + os.path.splitext(img_path)[1])
+            save_path = os.path.dirname(sys.argv[0])
+            # use_folder가 True일 경우 폴더를 생성하지 않음
+            if self.use_folder:
+                save_path = os.path.join(save_path, os.path.basename(img_path)[:-len(os.path.splitext(img_path)[1])] + self.save_suffix)
+                save_path = os.path.join(save_path + os.path.splitext(img_path)[1])
+            # False일 경우 폴더를 생성 
+            else:
+                save_path = os.path.join(save_path, self.save_folder)
+                if not os.path.exists(save_path):
+                    os.makedirs(save_path)
+                save_path = os.path.join(save_path, os.path.basename(img_path)[:-len(os.path.splitext(img_path)[1])] + self.save_suffix)
+                save_path = os.path.join(save_path + os.path.splitext(img_path)[1])
 
         # save_on_exe_folder가 False일 경우 원본 이미지와 동일한 경로에 저장 (폴더 생성 X)
         else:
