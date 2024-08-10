@@ -18,9 +18,11 @@ class ImageResizer:
         self.save_folder = 'resized'
         self.save_suffix = '_resized'
         self.save_on_exe_folder = True
+        self.is_path_override = False
+        self.path_override = 'C:\\Users\\Administrator\\Desktop'
         
         # 설정 파일이 없다면 만듦
-        if not os.path.exists('config.ini'):
+        if not os.path.exists('./config.ini'):
             # 설정 파일 생성
             config = configparser.ConfigParser(interpolation=None)
             
@@ -34,20 +36,26 @@ class ImageResizer:
             config['img_save']['save_folder'] = 'resized'
             config['img_save']['save_suffix'] = '_resized'
             config['img_save']['save_on_exe_folder'] = 'True'
+            config['img_path'] = {}
+            config['img_path']['is_path_override'] = 'False'
+            config['img_path']['path_override'] = 'C:\\Users\\Administrator\\Desktop'
 
             # 설정 파일 저장
-            with open('config.ini', 'w') as configfile:
+            with open('./config.ini', 'w') as configfile:
                 config.write(configfile)
         
         # 설정 파일을 불러옴
-        config = configparser.ConfigParser()
-        config.read('config.ini')
-        self.resize_all = config.getboolean('DEFAULT', 'resize_all')
-        self.target_area = config.getint('img_resize', 'target_area')
-        self.use_folder = config.getboolean('img_save', 'use_folder')
-        self.save_folder = config.get('img_save', 'save_folder')
-        self.save_suffix = config.get('img_save', 'save_suffix')
-        self.save_on_exe_folder = config.getboolean('img_save', 'save_on_exe_folder')
+        else:
+            config = configparser.ConfigParser()
+            config.read('./config.ini')
+            self.resize_all = config.getboolean('DEFAULT', 'resize_all')
+            self.target_area = config.getint('img_resize', 'target_area')
+            self.use_folder = config.getboolean('img_save', 'use_folder')
+            self.save_folder = config.get('img_save', 'save_folder')
+            self.save_suffix = config.get('img_save', 'save_suffix')
+            self.save_on_exe_folder = config.getboolean('img_save', 'save_on_exe_folder')
+            self.is_path_override = config.getboolean('img_path', 'is_path_override')
+            self.path_override = config.get('img_path', 'path_override')
     
     # 이미지 오염 여부 확인 함수
     def is_corrupted(self, img_path):
@@ -101,8 +109,13 @@ class ImageResizer:
 
     # 이미지 저장 함수
     def img_save(self, img, img_path):
+        # is_path_override가 True일 경우 path_override로 저장 (가장 우선됨, 폴더 생성 X)
+        if self.is_path_override:
+            save_path = self.path_override
+            save_path = os.path.join(save_path, os.path.basename(img_path)[:-len(os.path.splitext(img_path)[1])] 
+                                     + self.save_suffix + os.path.splitext(img_path)[1])
         # save_on_exe_folder가 True일 경우 실행 파일이 있는 폴더에 저장 (기본값, 폴더 생성 O)
-        if self.save_on_exe_folder:
+        elif self.save_on_exe_folder:
             save_path = os.path.dirname(sys.argv[0])
             # use_folder가 True일 경우 하위 폴더를 생성
             if self.use_folder:
