@@ -5,6 +5,8 @@
 
 리사이징하면 1024*1024 = 1048576 범위 안에 들어가도록 리사이징해줌
 
+기본적으로 exe나 py에 이미지를 드래그 앤 드롭해 실행하면 됨
+
 생성되는 컨픽 설명
 ```
 [DEFAULT]
@@ -42,6 +44,8 @@ path_override - 저장 경로
 Resizing code to prevent NAI Anlas waste
 
 Resizing to fall within the range of 1048576 (1024*1024)
+
+Basically you can drag and drop images on exe or py file
 
 Config desc
 ```
