@@ -29,9 +29,14 @@ is_path_override - 저장 경로 오버라이드 여부 (기본값 False)
 path_override - 저장 경로
 ```
 정보) 오버라이드는 use_folder, save_folder, save_on_exe_folder를 무시함
-빌드 하는 법
-'pyinstaller -F ddukddak_resizer_main.py'    
 
+빌드 하는 법
+'pyinstaller -F ddukddak_resizer_main.py'       
+
+
+
+
+#
 
 ### English
 Resizing code to prevent NAI Anlas waste
@@ -61,7 +66,7 @@ save_on_exe_folder - Whether to save to the same path as the executable file
 is_path_override - Determines Overriding output path (Default is False)
 path_override - Output path
 ```
-Info) If Override option is true, It ignores [use_folder, save_folder, save_on_exe_folder]
+Info) If Override option is true, It ignores [use_folder, save_folder, save_on_exe_folder]    
 
 How to build 
 'pyinstaller -F ddukddak_resizer_main.py'
