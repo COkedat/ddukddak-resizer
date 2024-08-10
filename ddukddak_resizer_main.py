@@ -104,17 +104,17 @@ class ImageResizer:
         # save_on_exe_folder가 True일 경우 실행 파일이 있는 폴더에 저장 (기본값, 폴더 생성 O)
         if self.save_on_exe_folder:
             save_path = os.path.dirname(sys.argv[0])
-            # use_folder가 True일 경우 폴더를 생성하지 않음
+            # use_folder가 True일 경우 하위 폴더를 생성
             if self.use_folder:
-                save_path = os.path.join(save_path, os.path.basename(img_path)[:-len(os.path.splitext(img_path)[1])] + self.save_suffix)
-                save_path = os.path.join(save_path + os.path.splitext(img_path)[1])
-            # False일 경우 폴더를 생성 
-            else:
                 save_path = os.path.join(save_path, self.save_folder)
                 if not os.path.exists(save_path):
                     os.makedirs(save_path)
-                save_path = os.path.join(save_path, os.path.basename(img_path)[:-len(os.path.splitext(img_path)[1])] + self.save_suffix)
-                save_path = os.path.join(save_path + os.path.splitext(img_path)[1])
+                save_path = os.path.join(save_path, os.path.basename(img_path)[:-len(os.path.splitext(img_path)[1])]
+                                         + self.save_suffix+ os.path.splitext(img_path)[1])
+            # False일 경우 하위 폴더를 생성하지 않음
+            else:
+                save_path = os.path.join(save_path, os.path.basename(img_path)[:-len(os.path.splitext(img_path)[1])] 
+                                         + self.save_suffix + os.path.splitext(img_path)[1])
 
         # save_on_exe_folder가 False일 경우 원본 이미지와 동일한 경로에 저장 (폴더 생성 X)
         else:
@@ -145,6 +145,7 @@ def main():
         if len(img_list) == 0:
             print("[Warning] No image files in the folder.")
             print("Usage: Please put image files in the folder.")
+            input("Press Any Key to exit...")
             return
 
     # False일 경우 인수로 들어온 이미지 파일만 리사이징 (기본값)
@@ -155,6 +156,7 @@ def main():
             print("Usage: python img_main.py [image_path1] [image_path2] ... ")
             print("or Drag and Drop image files to the script.")
             print("or change 'resize_all' to 'True' in config.ini to resize all images in the folder.")
+            input("Press Any Key to exit...")
             return
         # 인수들을 이미지 파일 리스트로 저장
         print("[Mode] Resize Selected")
@@ -173,4 +175,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    input("Press Any Key to exit...")
