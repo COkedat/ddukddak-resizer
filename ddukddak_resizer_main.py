@@ -21,8 +21,12 @@ class ImageResizer:
         self.is_path_override = False
         self.path_override = 'C:\\Users\\Administrator\\Desktop'
         
+        # 설정 파일 경로 설정
+        base_path = os.path.dirname(sys.argv[0])
+        config_path = os.path.join(base_path, 'config.ini')
+
         # 설정 파일이 없다면 만듦
-        if not os.path.exists('./config.ini'):
+        if not os.path.exists(config_path):
             # 설정 파일 생성
             config = configparser.ConfigParser(interpolation=None)
             
@@ -41,13 +45,13 @@ class ImageResizer:
             config['img_path']['path_override'] = 'C:\\Users\\Administrator\\Desktop'
 
             # 설정 파일 저장
-            with open('./config.ini', 'w') as configfile:
+            with open(config_path, 'w') as configfile:
                 config.write(configfile)
         
         # 설정 파일을 불러옴
         else:
-            config = configparser.ConfigParser()
-            config.read('./config.ini')
+            config = configparser.ConfigParser(interpolation=None)
+            config.read(config_path)
             self.resize_all = config.getboolean('DEFAULT', 'resize_all')
             self.target_area = config.getint('img_resize', 'target_area')
             self.use_folder = config.getboolean('img_save', 'use_folder')
