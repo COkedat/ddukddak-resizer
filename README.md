@@ -27,15 +27,10 @@ save_on_exe_folder - 실행 파일과 동일 경로에 저장할지 여부
 [img_path]
 is_path_override - 저장 경로 오버라이드 여부 (기본값 False)
 path_override - 저장 경로
-정보) 오버라이드는 use_folder, save_folder, save_on_exe_folder를 무시함
 ```
-
+정보) 오버라이드는 use_folder, save_folder, save_on_exe_folder를 무시함
 빌드 하는 법
-'pyinstaller -F ddukddak_resizer_main.py'
-
-
-
-
+'pyinstaller -F ddukddak_resizer_main.py'    
 
 
 ### English
@@ -65,9 +60,8 @@ save_on_exe_folder - Whether to save to the same path as the executable file
 [img_path]
 is_path_override - Determines Overriding output path (Default is False)
 path_override - Output path
-정보) If Override option is true, It ignores [use_folder, save_folder, save_on_exe_folder]
 ```
-
+Info) If Override option is true, It ignores [use_folder, save_folder, save_on_exe_folder]
 
 How to build 
 'pyinstaller -F ddukddak_resizer_main.py'
