@@ -79,8 +79,8 @@ class ImageResizer:
         img = Image.open(img_path)
         width, height = img.size
 
-        # 해상도의 곱이 target_area보다 작다면 이미지를 그대로 반환
-        if height * width < self.target_area:
+        # 해상도의 곱이 target_area보다 같거나 작다면 이미지를 그대로 반환
+        if height * width <= self.target_area:
             return img
         # 해상도의 곱이 target_area보다 크다면 이미지를 리사이즈
         else:
