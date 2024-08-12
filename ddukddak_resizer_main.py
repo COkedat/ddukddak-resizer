@@ -7,6 +7,7 @@ import configparser
 from PIL import Image
 import math
 import os
+from glob import glob
 from tkinter import filedialog
 
 class ImageResizer:
@@ -28,6 +29,8 @@ class ImageResizer:
         # img_load 섹션
         self.is_folder_mode = config.getboolean('img_load', 'is_folder_mode') \
             if (config.getboolean('img_load', 'is_folder_mode') is not None) else False
+        self.is_folder_mode_recursive = config.getboolean('img_load', 'is_folder_mode_recursive') \
+            if (config.getboolean('img_load', 'is_folder_mode_recursive') is not None) else False
         
         # img_resize 섹션
         self.target_area = config.getint('img_resize', 'target_area') \
@@ -68,6 +71,7 @@ class ImageResizer:
         # 설정 파일에 기본값 입력
         config['img_load'] = {}
         config['img_load']['is_folder_mode'] = 'False'
+        config['img_load']['is_folder_mode_recursive'] = 'False'
         config['img_resize'] = {}
         config['img_resize']['target_area'] = '1048576'
         config['img_save'] = {}
@@ -171,13 +175,23 @@ def main():
         if resizer.is_folder_mode:
             # 폴더 선택
             directory = filedialog.askdirectory(initialdir=base_path, title="Select Folder")
+            glob_pattern = ("*.jpg", "*.png","*.jpeg","*.bmp","*.gif","*.webp")
 
-            # 폴더 내 이미지 파일 리스트 불러오기
-            img_list = [f for f in os.listdir(directory) if 
-                f.endswith('.jpg') or f.endswith('.png') or 
-                f.endswith('.jpeg') or f.endswith('.bmp') or 
-                f.endswith('.gif') or f.endswith('.webp')] \
-                    if (directory is not None or directory != '') else None # 폴더 선택하지 않았을 경우 None
+            # 폴더 내 이미지 파일 리스트 불러오기 (재귀 O)
+            if ((directory is not None or directory != '') and resizer.is_folder_mode_recursive):
+                img_list = []
+                for imgs in glob_pattern:
+                    img_list.extend(glob(directory + "/**/" + imgs, recursive=True))
+
+            # 폴더 내 이미지 파일 리스트 불러오기 (재귀 X)
+            elif((directory is not None or directory != '') and not resizer.is_folder_mode_recursive):
+                img_list = []
+                for imgs in glob_pattern:
+                    img_list.extend(glob(directory + "/" + imgs))
+
+            # 폴더 선택하지 않았을 경우
+            else: 
+                img_list = None
             
         # 폴더 모드가 아닐 경우 이미지 파일 선택
         else:
