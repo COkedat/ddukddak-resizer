@@ -173,6 +173,7 @@ def main():
 
         # 폴더 모드일 경우 폴더 선택
         if resizer.is_folder_mode:
+            print("[Mode] Folder Selection")
             # 폴더 선택
             directory = filedialog.askdirectory(initialdir=base_path, title="Select Folder")
             glob_pattern = ("*.jpg", "*.png","*.jpeg","*.bmp","*.gif","*.webp")
@@ -195,6 +196,7 @@ def main():
             
         # 폴더 모드가 아닐 경우 이미지 파일 선택
         else:
+            print("[Mode] Image File Selection")
             img_list = filedialog.askopenfilenames(initialdir=base_path, title="Select Image Files", filetypes=[("Image Files", "*.jpg;*.png;*.jpeg;*.bmp;*.gif;*.webp")])
 
         # 이미지 파일이 없거나 선택하지 않았을 경우
