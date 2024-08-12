@@ -7,20 +7,12 @@ import configparser
 from PIL import Image
 import math
 import os
+from tkinter import filedialog
+from tkinter import messagebox
 
 class ImageResizer:
     # 생성자
     def __init__(self):
-        # 변수와 기본값 설정
-        self.resize_all = False
-        self.target_area = 1048576
-        self.use_folder = True
-        self.save_folder = 'resized'
-        self.save_suffix = '_resized'
-        self.save_on_exe_folder = True
-        self.is_path_override = False
-        self.path_override = 'C:\\Users\\Administrator\\Desktop'
-        
         # 설정 파일 경로 설정
         base_path = os.path.dirname(sys.argv[0])
         config_path = os.path.join(base_path, 'config.ini')
@@ -28,38 +20,36 @@ class ImageResizer:
         # 설정 파일이 없다면 만듦
         if not os.path.exists(config_path):
             # 설정 파일 생성
-            config = configparser.ConfigParser(interpolation=None)
-            
-            # 설정 파일에 기본값 입력
-            config['DEFAULT'] = {}
-            config['DEFAULT']['resize_all'] = 'False'
-            config['img_resize'] = {}
-            config['img_resize']['target_area'] = '1048576'
-            config['img_save'] = {}
-            config['img_save']['use_folder'] = 'True'
-            config['img_save']['save_folder'] = 'resized'
-            config['img_save']['save_suffix'] = '_resized'
-            config['img_save']['save_on_exe_folder'] = 'True'
-            config['img_path'] = {}
-            config['img_path']['is_path_override'] = 'False'
-            config['img_path']['path_override'] = 'C:\\Users\\Administrator\\Desktop'
-
-            # 설정 파일 저장
-            with open(config_path, 'w') as configfile:
-                config.write(configfile)
+            self.makeConfig(config_path)
         
         # 설정 파일을 불러옴
-        else:
-            config = configparser.ConfigParser(interpolation=None)
-            config.read(config_path)
-            self.resize_all = config.getboolean('DEFAULT', 'resize_all')
-            self.target_area = config.getint('img_resize', 'target_area')
-            self.use_folder = config.getboolean('img_save', 'use_folder')
-            self.save_folder = config.get('img_save', 'save_folder')
-            self.save_suffix = config.get('img_save', 'save_suffix')
-            self.save_on_exe_folder = config.getboolean('img_save', 'save_on_exe_folder')
-            self.is_path_override = config.getboolean('img_path', 'is_path_override')
-            self.path_override = config.get('img_path', 'path_override')
+        config = configparser.ConfigParser(interpolation=None)
+        config.read(config_path)
+        
+        # img_load 섹션
+        self.is_folder_mode = config.getboolean('img_load', 'is_folder_mode') \
+            if (config.getboolean('img_load', 'is_folder_mode') is not None) else False
+        
+        # img_resize 섹션
+        self.target_area = config.getint('img_resize', 'target_area') \
+            if (config.getint('img_resize', 'target_area') is not None) else 1048576
+        
+        # img_save 섹션
+        self.use_folder = config.getboolean('img_save', 'use_folder') \
+            if (config.getboolean('img_save', 'use_folder') is not None) else True
+        self.save_folder = config.get('img_save', 'save_folder') \
+            if (config.get('img_save', 'save_folder') is not None) else 'resized'
+        self.save_suffix = config.get('img_save', 'save_suffix') \
+            if (config.get('img_save', 'save_suffix') is not None) else '_resized'
+        self.save_on_exe_folder = config.getboolean('img_save', 'save_on_exe_folder') \
+            if (config.getboolean('img_save', 'save_on_exe_folder') is not None) else True
+        
+        # img_path 섹션
+        self.is_path_override = config.getboolean('img_path', 'is_path_override') \
+            if (config.getboolean('img_path', 'is_path_override') is not None) else False
+        self.path_override = config.get('img_path', 'path_override') \
+            if (config.get('img_path', 'path_override') is not None) else 'C:\\Users\\Administrator\\Desktop'
+                
     
     # 이미지 오염 여부 확인 함수
     def is_corrupted(self, img_path):
@@ -71,6 +61,28 @@ class ImageResizer:
         except:
             return True
 
+    # 설정 파일 생성 함수
+    def makeConfig(self, config_path):
+        # 설정 파일 생성
+        config = configparser.ConfigParser(interpolation=None)
+        
+        # 설정 파일에 기본값 입력
+        config['img_load'] = {}
+        config['img_load']['is_folder_mode'] = 'False'
+        config['img_resize'] = {}
+        config['img_resize']['target_area'] = '1048576'
+        config['img_save'] = {}
+        config['img_save']['use_folder'] = 'True'
+        config['img_save']['save_folder'] = 'resized'
+        config['img_save']['save_suffix'] = '_resized'
+        config['img_save']['save_on_exe_folder'] = 'True'
+        config['img_path'] = {}
+        config['img_path']['is_path_override'] = 'False'
+        config['img_path']['path_override'] = 'C:\\Users\\Administrator\\Desktop'
+
+        # 설정 파일 저장
+        with open(config_path, 'w') as configfile:
+            config.write(configfile)
 
     # 이미지 리사이즈 함수
     # 기본적인 목표는 이미지의 해상도의 곱이 target_area보다 작아지도록 리사이즈
@@ -150,33 +162,35 @@ class ImageResizer:
 def main():
     # 클래스 생성
     resizer = ImageResizer()
-    
-    # resize_all이 True일 경우 동일 폴더 내 모든 이미지 리사이징
-    if resizer.resize_all:
-        # 이미지 파일 목록 불러오기
-        print("[Mode] Resize All")
-        img_list = [f for f in os.listdir('.') if 
-                    f.endswith('.jpg') or f.endswith('.png') or 
-                    f.endswith('.jpeg') or f.endswith('.bmp') or 
-                    f.endswith('.gif') or f.endswith('.webp')]
-        if len(img_list) == 0:
-            print("[Warning] No image files in the folder.")
-            print("Usage: Please put image files in the folder.")
-            input("Press Any Key to exit...")
-            return
 
-    # False일 경우 인수로 들어온 이미지 파일만 리사이징 (기본값)
-    else:      
-        # 이미지 파일 경로를 입력하지 않았을 경우 사용법 출력
-        if len(sys.argv) < 2:
-            print("[Warning] No image file path is given.")
-            print("Usage: python img_main.py [image_path1] [image_path2] ... ")
-            print("or Drag and Drop image files to the script.")
-            print("or change 'resize_all' to 'True' in config.ini to resize all images in the folder.")
+    # 이미지 파일 경로를 입력하지 않았을 경우 사용법 출력
+    if len(sys.argv) < 2:
+        # 기초 경로 설정
+        base_path = os.path.dirname(sys.argv[0])
+
+        # 폴더 모드일 경우 폴더 선택
+        if resizer.is_folder_mode:
+            # 폴더 선택
+            directory = filedialog.askdirectory(initialdir=base_path, title="Select Folder")
+
+            # 폴더 내 이미지 파일 리스트 불러오기
+            img_list = [f for f in os.listdir(directory) if 
+                f.endswith('.jpg') or f.endswith('.png') or 
+                f.endswith('.jpeg') or f.endswith('.bmp') or 
+                f.endswith('.gif') or f.endswith('.webp')] \
+                    if (directory is not None or directory != '') else None # 폴더 선택하지 않았을 경우 None
+            
+        # 폴더 모드가 아닐 경우 이미지 파일 선택
+        else:
+            img_list = filedialog.askopenfilenames(initialdir=base_path, title="Select Image Files", filetypes=[("Image Files", "*.jpg;*.png;*.jpeg;*.bmp;*.gif;*.webp")])
+
+        # 이미지 파일이 없거나 선택하지 않았을 경우
+        if (img_list is None or len(img_list) == 0):
+            print("[Warning] No image files or No folder selected. Exiting...")
             input("Press Any Key to exit...")
             return
+    else:
         # 인수들을 이미지 파일 리스트로 저장
-        print("[Mode] Resize Selected")
         img_list = sys.argv[1:]
 
     # 이미지 리스트 리사이징 후 저장
