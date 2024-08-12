@@ -178,21 +178,26 @@ def main():
             directory = filedialog.askdirectory(initialdir=base_path, title="Select Folder")
             glob_pattern = ("*.jpg", "*.png","*.jpeg","*.bmp","*.gif","*.webp")
 
+            # 폴더 선택하지 않았을 경우
+            if (directory is None or directory == ''):
+                img_list = None
+
             # 폴더 내 이미지 파일 리스트 불러오기 (재귀 O)
-            if ((directory is not None or directory != '') and resizer.is_folder_mode_recursive):
+            elif(resizer.is_folder_mode_recursive):
                 img_list = []
                 for imgs in glob_pattern:
                     img_list.extend(glob(directory + "/**/" + imgs, recursive=True))
 
             # 폴더 내 이미지 파일 리스트 불러오기 (재귀 X)
-            elif((directory is not None or directory != '') and not resizer.is_folder_mode_recursive):
+            elif(not resizer.is_folder_mode_recursive):
                 img_list = []
                 for imgs in glob_pattern:
                     img_list.extend(glob(directory + "/" + imgs))
 
-            # 폴더 선택하지 않았을 경우
+            # 그외의 경우
             else: 
                 img_list = None
+                print("[Warning] Something is wrong. Delete your config file and restart or Tell developer...")
             
         # 폴더 모드가 아닐 경우 이미지 파일 선택
         else:
