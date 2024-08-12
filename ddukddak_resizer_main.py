@@ -8,7 +8,6 @@ from PIL import Image
 import math
 import os
 from tkinter import filedialog
-from tkinter import messagebox
 
 class ImageResizer:
     # 생성자
