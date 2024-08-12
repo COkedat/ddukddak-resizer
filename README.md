@@ -9,10 +9,14 @@
 
 생성되는 컨픽 설명
 ```
-[DEFAULT]
-resize_all - 이미지 리스트를 어떻게 모을지 여부
- - True  >> 실행 파일과 동일 폴더내 모든 이미지들로 리스트 작성
- - False >> 드래그 앤 드롭이나 인수로 이미지 리스트 작성 (기본값)
+[img_load]
+is_folder_mode - 그냥 실행시 폴더 선택으로 바꿀지 여부
+ - True  >> 폴더 선택
+ - False >> 파일 선택 (기본값)
+is_folder_mode_recursive - 폴더 선택일 경우 재귀로 불러오는지 여부
+ - True  >> 재귀로 내부 폴더까지 불러옴
+ - False >> 해당 폴더에서만 불러옴 (기본값)
+
 
 [img_resize]
 target_area - 가로*세로의 최대 크기
@@ -49,10 +53,14 @@ Basically you can drag and drop images on exe or py file
 
 Config desc
 ```
-[DEFAULT]
-resize_all - How to create the image list
- - True  >> Create a list of all images in the same folder as the executable file
- - False >> Create an image list with drag-and-drop or argument (Default)
+[img_load]
+is_folder_mode - Folder Selction if you start with no arguments
+ - True  >> Folder Selction
+ - False >> File Selction (Default)
+is_folder_mode_recursive - Recursively load image files on Folder Selection Mode
+ - True  >> Recursively load image files on Folder Selection Mode
+ - False >> Only load image files on selected folder (Default)
+
 
 [img_resize]
 target_area - Maximum Size of Width * Length
