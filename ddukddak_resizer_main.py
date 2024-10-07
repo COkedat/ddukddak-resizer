@@ -33,8 +33,9 @@ class ImageResizer:
             if (config.getboolean('img_load', 'is_folder_mode_recursive') is not None) else False
         
         # img_resize 섹션
-        self.target_area = config.getint('img_resize', 'target_area') \
-            if (config.getint('img_resize', 'target_area') is not None) else 1048576
+        self.target_size = config.getint('img_resize', 'target_size') \
+            if (config.getint('img_resize', 'target_size') is not None) else 1024
+        self.target_area = self.target_size * self.target_size
         
         # img_save 섹션
         self.use_folder = config.getboolean('img_save', 'use_folder') \
@@ -73,7 +74,7 @@ class ImageResizer:
         config['img_load']['is_folder_mode'] = 'False'
         config['img_load']['is_folder_mode_recursive'] = 'False'
         config['img_resize'] = {}
-        config['img_resize']['target_area'] = '1048576'
+        config['img_resize']['target_size'] = '1024'
         config['img_save'] = {}
         config['img_save']['use_folder'] = 'True'
         config['img_save']['save_folder'] = 'resized'
@@ -99,9 +100,9 @@ class ImageResizer:
             return img
         # 해상도의 곱이 target_area보다 크다면 이미지를 리사이즈
         else:
-            # 이미지의 비율이 1:1이라면 1024X1024로 변경
+            # 이미지의 비율이 1:1이라면 target_size X target_size로 변경
             if height == width:
-                img = img.resize((1024, 1024), Image.Resampling.LANCZOS)
+                img = img.resize((self.target_size, self.target_size), Image.Resampling.LANCZOS)
 
             # 아니면 해상도의 곱이 target_area보다 작아질때까지 비율에 맞춰 줄임
             else:
