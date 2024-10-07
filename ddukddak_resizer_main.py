@@ -143,7 +143,7 @@ class ImageResizer:
                 if not os.path.exists(save_path):
                     os.makedirs(save_path)
                 save_path = os.path.join(save_path, os.path.basename(img_path)[:-len(os.path.splitext(img_path)[1])]
-                                         + self.save_suffix+ os.path.splitext(img_path)[1])
+                                         + self.save_suffix + os.path.splitext(img_path)[1])
             # False일 경우 하위 폴더를 생성하지 않음
             else:
                 save_path = os.path.join(save_path, os.path.basename(img_path)[:-len(os.path.splitext(img_path)[1])] 
@@ -151,14 +151,21 @@ class ImageResizer:
 
         # save_on_exe_folder가 False일 경우 원본 이미지와 동일한 경로에 저장 (폴더 생성 X)
         else:
-            # 파일의 경로, 이름, 확장자 분리
-            file_path = os.path.dirname(img_path)
-            file_name = os.path.basename(img_path)
-            file_ext = os.path.splitext(img_path)[1]
-
-            # 저장할 파일 이름 생성
-            file_name = file_name[:-len(file_ext)] + self.save_suffix + file_ext
-            save_path = os.path.join(file_path, file_name)
+            # 원본 파일 경로
+            save_path = os.path.dirname(img_path)
+            # use_folder가 True일 경우 하위 폴더를 생성
+            if self.use_folder:
+                # 저장 폴더 생성
+                save_path = os.path.join(save_path, self.save_folder)
+                if not os.path.exists(save_path):
+                    os.makedirs(save_path)
+                # 저장 폴더와 파일명 연결 (확장자 제거)
+                save_path = os.path.join(save_path, os.path.basename(img_path)[:-len(os.path.splitext(img_path)[1])]
+                                        + self.save_suffix + os.path.splitext(img_path)[1])
+            else:
+                # 폴더와 파일명 연결 (확장자 제거)
+                save_path = os.path.join(save_path, os.path.basename(img_path)[:-len(os.path.splitext(img_path)[1])]
+                                        + self.save_suffix + os.path.splitext(img_path)[1])
 
         # 이미지 저장
         img.save(save_path)
