@@ -19,8 +19,8 @@ is_folder_mode_recursive - 폴더 선택일 경우 재귀로 불러오는지 여
 
 
 [img_resize]
-target_area - 가로*세로의 최대 크기
- - 1048576 (기본값)
+target_size - 가로 세로 최대 크기
+ - 1024 (기본값)
 
 [img_save]
 use_folder - output 폴더 생성 여부 (기본값 True)
@@ -63,8 +63,8 @@ is_folder_mode_recursive - Recursively load image files on Folder Selection Mode
 
 
 [img_resize]
-target_area - Maximum Size of Width * Length
- - 1048576 (Default)
+target_area - Maximum Size of Width or Length
+ - 1024 (Default)
 
 [img_save]
 use_folder - Determines creating output folder (Default is True)
